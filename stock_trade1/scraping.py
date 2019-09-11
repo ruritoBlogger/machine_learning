@@ -27,6 +27,7 @@ for number in stock_numbers:
         #print(data[i-1])
         cnt = 0;
         for j in data[i-1]:
+            #日付だけ取得しない
             if( cnt == 0):
                 cnt += 1
                 continue
