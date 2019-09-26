@@ -23,3 +23,7 @@
 - 出力層 2
 - data_sizeは約8000
 - accuracy 49%
+
+## Stock_trade2
+- Stock_trade1では単純なCNNを用いて実装していたモデルの部分にRNNを用いる
+- 現在作成中
