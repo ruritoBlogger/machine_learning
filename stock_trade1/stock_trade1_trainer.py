@@ -118,7 +118,7 @@ class MyChain(Chain):
         return o
 
 
-# In[ ]:
+# In[12]:
 
 # 何日間のデータで学習させるか
 key_data = 6
@@ -159,15 +159,29 @@ optimizer.setup(model)
 #学習用データと検証用データに分ける
 train, test = chainer.datasets.split_dataset_random(data, int(N * 0.8))
 train_iter = chainer.iterators.SerialIterator(train, n_batchsize, shuffle=False)
-test_iter = chainer.iterators.SerialIterator(test, n_batchsize, shuffle=False)
+test_iter = chainer.iterators.SerialIterator(test, n_batchsize, repeat=False, shuffle=False)
 #print(test_iter.next()[0])
 updater = training.StandardUpdater(train_iter, optimizer, device=-1)
 trainer = training.Trainer(updater, (n_epoch, "epoch"), out="result")
 trainer.extend(extensions.Evaluator(test_iter, model, device=-1))
-trainer.extend(extensions.LogReport(trigger=(1, "epoch"))) # 1エポックごとにログ出力
+trainer.extend(extensions.LogReport(trigger=(10, "epoch"))) # 1エポックごとにログ出力
 trainer.extend(extensions.PrintReport( ["epoch", "main/loss", "validation/main/loss", "main/accuracy", "validation/main/accuracy", "elapsed_time"])) # エポック、学習損失、テスト損失、学習正解率、テスト正解率、経過時間
-trainer.extend(extensions.ProgressBar()) # プログレスバー出力
+#trainer.extend(extensions.ProgressBar()) # プログレスバー出力
+#trainer.extend(extensions.dump_graph('main/accuracy'))
+trainer.extend(extensions.PlotReport(['main/loss', 'val/main/loss'], x_key='epoch', file_name='loss.png'))
+trainer.extend(extensions.PlotReport(['main/accuracy', 'val/main/accuracy'], x_key='epoch', file_name='accuracy.png'))
 trainer.run()
+
+
+# In[13]:
+
+from IPython.display import Image, display_png
+display_png(Image("./result/accuracy.png"))
+
+
+# In[14]:
+
+display_png(Image("./result/loss.png"))
 
 
 # In[ ]:

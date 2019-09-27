@@ -23,6 +23,8 @@
 - 出力層 2
 - data_sizeは約8000
 - accuracy 49%
+- stock_trade1_trainer.pyでは上記のコードをchainerが提供しているTrainerというものを用いて実装したもの
+- accuracyなどの結果は /result ディレクトリに格納
 
 ## Stock_trade2
 - Stock_trade1では単純なCNNを用いて実装していたモデルの部分にRNNを用いる
