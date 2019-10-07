@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[16]:
 
 import chainer
 from chainer import training, iterators, optimizers, serializers, Chain
@@ -14,7 +14,7 @@ from chainer import optimizers, Chain, dataset, datasets, iterators
 import numpy as np
 
 
-# In[2]:
+# In[17]:
 
 def data_read( file_name, key_data, is_one_hot ):
     teachers = np.array([] )
@@ -49,11 +49,12 @@ def data_read( file_name, key_data, is_one_hot ):
             
     f.close()
 
-    from sklearn.preprocessing import MinMaxScaler
- 
-    scaler = MinMaxScaler(feature_range=(0, 1))
-    if( len(teachers) != 0 ):
-        teachers[3:-1:6] = scaler.fit_transform(teachers[3:-1:6])
+    
+    #if( len(teachers) != 0 ):
+        #teachers[3:-1:6] = scaler.fit_transform(teachers[3:-1:6])
+        #xmean = teachers[3:-1:6].mean(axis=1, keepdims=True)
+        #xstd  = np.std(teachers[3:-1:6], axis=1, keepdims=True)
+        #teachers[3:-1:6] = (x-xmean)/xstd
     teachers = teachers.astype( np.float32 )
     answers = answers.astype( np.float32 )
 
@@ -63,7 +64,7 @@ def data_read( file_name, key_data, is_one_hot ):
     return teachers, answers
 
 
-# In[3]:
+# In[18]:
 
 def take_data(year, key_day, is_one_hot):
     file = open('nikkei.txt')
@@ -89,14 +90,14 @@ def take_data(year, key_day, is_one_hot):
     return teachers, answers
 
 
-# In[4]:
+# In[19]:
 
 # 何日間のデータで学習させるか
 key_data = 6
 teachers, answers = take_data(2018, key_data, True)
 
 
-# In[39]:
+# In[20]:
 
 #ニューラルネットワークの構築。
 class MyChain(Chain):
@@ -128,7 +129,7 @@ class MyChain(Chain):
         return self.l3(h2)
 
 
-# In[40]:
+# In[21]:
 
 ## LSTMUpdaterを作る。
 from chainer import Variable, reporter
@@ -153,7 +154,7 @@ class LSTMUpdater(training.StandardUpdater):
         optimizer.update() 
 
 
-# In[41]:
+# In[ ]:
 
 #　教師データのtupleを作成する
 data = datasets.TupleDataset(teachers, answers)
@@ -172,7 +173,7 @@ results_valid = {
 }
 
 n_batchsize = 30
-n_epoch = 1000
+n_epoch = 10000
 
 #モデルを使う準備。オブジェクトを生成
 n_hidden = (key_data-1)*6
